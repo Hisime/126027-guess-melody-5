@@ -10,6 +10,7 @@ module.exports = {
         contentBase: path.resolve(__dirname, 'public'),
         open: false,
         port: 1337,
+        historyApiFallback: true
     },
     module: {
         rules: [
@@ -25,5 +26,5 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.jsx']
     },
-    devtool: 'source-map',
+    devtool: 'source-map'
 };
