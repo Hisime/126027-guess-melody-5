@@ -1,15 +1,14 @@
 import React from "react";
-import propTypes from "prop-types";
+import PropTypes from "prop-types";
 import {BrowserRouter, Switch, Route} from "react-router-dom";
 import {Welcome} from "../welcome/welcome";
 import {SignIn} from "../sign-in/sign-in";
 import {Result} from "../result/result";
 import {GameOver} from "../game-over/game-over";
-import {Genre} from "../genre/genre";
-import {Artist} from "../artist/artist";
+import {Game} from "../game/game";
 
 export const App = (props) => {
-  const {errorsCount} = props;
+  const {errorsCount, questions} = props;
   return (
     <BrowserRouter>
       <Switch>
@@ -22,20 +21,25 @@ export const App = (props) => {
         <Route path="/result" exact>
           <Result/>
         </Route>
-        <Route path="/dev-artist" exact>
-          <Artist/>
+        <Route path="/game" exact>
+          <Game
+            questions={questions}/>
         </Route>
-        <Route path="/dev-genre" exact>
-          <Genre/>
-        </Route>
-        <Route path="/">
-          <Welcome errorsCount = {errorsCount}/>
-        </Route>
+        <Route
+          path="/"
+          render={({history}) => (
+            <Welcome
+              onPlayButtonClick={() => history.push(`/game`)}
+              errorsCount={errorsCount}
+            />
+          )}
+        />
       </Switch>
     </BrowserRouter>
   );
 };
 
 App.propTypes = {
-  errorsCount: propTypes.number.isRequired
+  errorsCount: PropTypes.number.isRequired,
+  questions: PropTypes.array.isRequired
 };
