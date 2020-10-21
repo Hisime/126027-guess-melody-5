@@ -6,6 +6,8 @@ import {SignIn} from "../sign-in/sign-in";
 import {Result} from "../result/result";
 import {GameOver} from "../game-over/game-over";
 import {Game} from "../game/game";
+import artistProp from "../artist/artist.prop";
+import genreProp from "../genre/genre.prop";
 
 export const App = (props) => {
   const {errorsCount, questions} = props;
@@ -41,5 +43,7 @@ export const App = (props) => {
 
 App.propTypes = {
   errorsCount: PropTypes.number.isRequired,
-  questions: PropTypes.array.isRequired
+  questions: PropTypes.arrayOf(
+      PropTypes.oneOfType([artistProp, genreProp]).isRequired
+  ),
 };

@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import {GameType} from "../../const";
+import artistProp from "./artist.prop";
 
 export const Artist = (props) => {
-  const {onAnswer, question} = props;
+  const {onAnswer, question, renderPlayer} = props;
   const {answers, song} = question;
   return (
     <section className="game game--artist">
@@ -28,12 +28,7 @@ export const Artist = (props) => {
         <h2 className="game__title">Кто исполняет эту песню?</h2>
         <div className="game__track">
           <div className="track">
-            <button className="track__button track__button--play" type="button"></button>
-            <div className="track__status">
-              <audio
-                src={song.src}
-              />
-            </div>
+            {renderPlayer(song.src, 0)}
           </div>
         </div>
         <form className="game__artist">
@@ -45,7 +40,7 @@ export const Artist = (props) => {
                   onAnswer(question, answer);
                 }}/>
               <label className="artist__name" htmlFor={`answer-${i}`}>
-                <img className="artist__picture" src={answer.picture} alt="Пелагея"/>
+                <img className="artist__picture" src={answer.picture} alt={answer.artist}/>
                 {answer.artist}
               </label>
             </div>
@@ -58,16 +53,6 @@ export const Artist = (props) => {
 
 Artist.propTypes = {
   onAnswer: PropTypes.func.isRequired,
-  question: PropTypes.shape({
-    answers: PropTypes.arrayOf(PropTypes.shape({
-      artist: PropTypes.string.isRequired,
-      picture: PropTypes.string.isRequired,
-      id: PropTypes.number.isRequired
-    })).isRequired,
-    song: PropTypes.shape({
-      artist: PropTypes.string.isRequired,
-      src: PropTypes.string.isRequired,
-    }).isRequired,
-    type: PropTypes.oneOf([GameType.ARTIST, GameType.GENRE]).isRequired,
-  }).isRequired
+  question: artistProp,
+  renderPlayer: PropTypes.func.isRequired,
 };

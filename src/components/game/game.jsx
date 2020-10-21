@@ -4,7 +4,10 @@ import {Redirect} from 'react-router-dom';
 import {GameType} from '../../const';
 import {Artist} from '../artist/artist';
 import {Genre} from '../genre/genre';
+import withAudioPlayer from "../../hocs/with-audio-player/with-audio-player";
 
+const GenreQuestionScreenWrapped = withAudioPlayer(Genre);
+const ArtistQuestionScreenWrapped = withAudioPlayer(Artist);
 export class Game extends PureComponent {
   constructor(props) {
     super(props);
@@ -24,7 +27,7 @@ export class Game extends PureComponent {
     switch (question.type) {
       case GameType.ARTIST:
         return (
-          <Artist
+          <ArtistQuestionScreenWrapped
             question={question}
             onAnswer={() => {
               this.setState((prevState) => ({
@@ -35,7 +38,7 @@ export class Game extends PureComponent {
         );
       case GameType.GENRE:
         return (
-          <Genre
+          <GenreQuestionScreenWrapped
             question={question}
             onAnswer={() => {
               this.setState((prevState) => ({
