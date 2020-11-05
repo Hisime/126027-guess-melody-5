@@ -10,7 +10,7 @@ export class Genre extends PureComponent {
     };
   }
   render() {
-    const {onAnswer, question, renderPlayer} = this.props;
+    const {onAnswer, question, renderPlayer, children} = this.props;
     const {answers: userAnswers} = this.state;
     const {answers, genre} = question;
     return (
@@ -24,11 +24,7 @@ export class Genre extends PureComponent {
             <circle className="timer__line" cx="390" cy="390" r="370"
               styles="filter: url(#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"/>
           </svg>
-          <div className="game__mistakes">
-            <div className="wrong"></div>
-            <div className="wrong"></div>
-            <div className="wrong"></div>
-          </div>
+          {children}
         </header>
         <section className="game__screen">
           <h2 className="game__title">Выберите {genre} треки</h2>
@@ -72,4 +68,5 @@ Genre.propTypes = {
   onAnswer: PropTypes.func.isRequired,
   question: genreProp,
   renderPlayer: PropTypes.func.isRequired,
+  children: PropTypes.element.isRequired,
 };
