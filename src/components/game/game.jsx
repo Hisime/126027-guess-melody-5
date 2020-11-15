@@ -1,25 +1,34 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {Redirect} from 'react-router-dom';
-import {GameType} from '../../const';
+import {GameType, MAX_MISTAKE_COUNT} from '../../const';
 import {Artist} from '../artist/artist';
-import {Genre} from '../genre/genre';
+import Genre from '../genre/genre';
 import withAudioPlayer from "../../hocs/with-audio-player/with-audio-player";
 import {connect} from "react-redux";
 import {ActionCreator} from "../../store/action";
 import Mistakes from "../mistakes/mistakes";
 import artistQuestionProp from "../artist/artist.prop";
 import genreQuestionProp from "../genre/genre.prop";
+import withUserAnswer from "../../hocs/with-user-answer/with-user-answer";
 
-const GenreQuestionScreenWrapped = withAudioPlayer(Genre);
+const GenreQuestionScreenWrapped = withAudioPlayer(withUserAnswer(Genre));
 const ArtistQuestionScreenWrapped = withAudioPlayer(Artist);
 const Game = (props) => {
-  const {questions, step, onUserAnswer, resetGame, mistakes} = props;
+  const {
+    questions,
+    step,
+    onUserAnswer,
+    mistakes} = props;
   const question = questions[step];
-  if (step >= questions.length || !question) {
-    resetGame();
+  if (mistakes >= MAX_MISTAKE_COUNT) {
     return (
-      <Redirect to="/" />
+      <Redirect to="/lose" />
+    );
+  }
+  if (step >= questions.length || !question) {
+    return (
+      <Redirect to="/result" />
     );
   }
   switch (question.type) {
@@ -49,7 +58,6 @@ const Game = (props) => {
 Game.propTypes = {
   questions: PropTypes.arrayOf(PropTypes.oneOfType([artistQuestionProp, genreQuestionProp]).isRequired),
   step: PropTypes.number.isRequired,
-  resetGame: PropTypes.func.isRequired,
   onUserAnswer: PropTypes.func.isRequired,
   mistakes: PropTypes.number.isRequired,
 };

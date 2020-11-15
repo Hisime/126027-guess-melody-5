@@ -1,72 +1,67 @@
-import React, {PureComponent} from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import genreProp from "./genre.prop";
+import GenreQuestionItem from "../genre-question-item/genre-question-item";
 
-export class Genre extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      answers: [false, false, false, false],
-    };
-  }
-  render() {
-    const {onAnswer, question, renderPlayer, children} = this.props;
-    const {answers: userAnswers} = this.state;
-    const {answers, genre} = question;
-    return (
-      <section className="game game--genre">
-        <header className="game__header">
-          <a className="game__back" href="#">
-            <span className="visually-hidden">Сыграть ещё раз</span>
-            <img className="game__logo" src="img/melody-logo-ginger.png" alt="Угадай мелодию"/>
-          </a>
-          <svg xmlns="http://www.w3.org/2000/svg" className="timer" viewBox="0 0 780 780">
-            <circle className="timer__line" cx="390" cy="390" r="370"
-              styles="filter: url(#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"/>
-          </svg>
-          {children}
-        </header>
-        <section className="game__screen">
-          <h2 className="game__title">Выберите {genre} треки</h2>
-          <form
-            className="game__tracks"
-            onSubmit={ (evt) => {
-              evt.preventDefault();
-              onAnswer(question, this.state.answers);
-            }}
-          >
-            {answers.map((answer, i) => {
-              return <div key={answer.id} className="track">
-                {renderPlayer(answer.src, i)}
-                <div className="game__answer">
-                  <input className="game__input visually-hidden" type="checkbox" name="answer"
-                    value={`answer-${i}`}
-                    id={`answer-${i}`}
-                    checked={userAnswers[i]}
-                    onChange={ (evt) => {
-                      const value = evt.target.checked;
-                      this.setState({
-                        answers: [...userAnswers.slice(0, i), value, ...userAnswers.slice(i + 1)],
-                      });
-                    }}
-                  />
-                  <label className="game__check" htmlFor={`answer-${i}`}>Отметить</label>
-                </div>
-              </div>;
-            })}
 
-            <button className="game__submit button" type="submit">Ответить</button>
-          </form>
-        </section>
+const Genre = (props) => {
+  const {
+    onAnswer,
+    question,
+    renderPlayer,
+    children,
+    userAnswers,
+    onChange} = props;
+  const {
+    answers,
+    genre} = question;
+  return (
+    <section className="game game--genre">
+      <header className="game__header">
+        <a className="game__back" href="#">
+          <span className="visually-hidden">Сыграть ещё раз</span>
+          <img className="game__logo" src="img/melody-logo-ginger.png" alt="Угадай мелодию"/>
+        </a>
+        <svg xmlns="http://www.w3.org/2000/svg" className="timer" viewBox="0 0 780 780">
+          <circle className="timer__line" cx="390" cy="390" r="370"
+            styles="filter: url(#blur); transform: rotate(-90deg) scaleY(-1); transform-origin: center"/>
+        </svg>
+        {children}
+      </header>
+      <section className="game__screen">
+        <h2 className="game__title">Выберите {genre} треки</h2>
+        <form
+          className="game__tracks"
+          onSubmit={ (evt) => {
+            evt.preventDefault();
+            onAnswer();
+          }}
+        >
+          {answers.map((answer, i) => (
+            <GenreQuestionItem
+              answer={answer}
+              id={i}
+              key={`${i}-${answer.src}`}
+              onChange={onChange}
+              renderPlayer={renderPlayer}
+              userAnswer={userAnswers[i]}
+            />
+          ))}
+
+          <button className="game__submit button" type="submit">Ответить</button>
+        </form>
       </section>
-    );
-  }
-
-}
+    </section>
+  );
+};
 
 Genre.propTypes = {
   onAnswer: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
   question: genreProp,
   renderPlayer: PropTypes.func.isRequired,
   children: PropTypes.element.isRequired,
+  userAnswers: PropTypes.arrayOf(PropTypes.bool).isRequired,
 };
+
+export default Genre;
